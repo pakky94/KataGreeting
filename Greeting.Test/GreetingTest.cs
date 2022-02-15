@@ -9,12 +9,10 @@ namespace Greeting.Test
         [SetUp]
         public void Setup()
         {
-
-            _sut = null;
+            _sut = new Greeting();
         }
 
         [Test]
-        [Ignore("Temp")]
         public void Should_Add_Greeting_To_Name()
         {
             var expected = "Hello, Andrea.";
