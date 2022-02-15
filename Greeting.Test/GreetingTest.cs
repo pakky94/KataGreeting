@@ -22,7 +22,6 @@ namespace Greeting.Test
         }
 
         [Test]
-        [Ignore("Temp")]
         public void Should_Handle_Null_Name()
         {
             var expected = "Hello, my friend.";
@@ -32,17 +31,15 @@ namespace Greeting.Test
         }
 
         [Test]
-        [Ignore("Temp")]
         public void Should_Handle_Uppercase_Name()
         {
-            var expected = "HELLO, ANDREA!";
+            var expected = "HELLO ANDREA!";
             var actual = _sut.Greet("ANDREA");
 
             Assert.AreEqual(expected, actual);
         }
 
         [Test]
-        [Ignore("Temp")]
         public void Should_Handle_Two_Name()
         {
             var expected = "Hello, Andrea and Franco.";
@@ -52,7 +49,6 @@ namespace Greeting.Test
         }
 
         [Test]
-        [Ignore("Temp")]
         public void Should_Handle_Multiple_Name()
         {
             var expected = "Hello, Andrea, Franco and Giuseppe.";
@@ -62,11 +58,19 @@ namespace Greeting.Test
         }
 
         [Test]
-        [Ignore("Temp")]
         public void Should_Handle_Multiple_Name_With_Upper()
         {
             var expected = "Hello, Andrea and Franco. AND HELLO GIUSEPPE!";
             var actual = _sut.Greet("Andrea", "Franco", "GIUSEPPE");
+
+            Assert.AreEqual(expected, actual);
+        }
+        
+        [Test]
+        public void Should_Handle_Multiple_Name_With_Mulitple_Upper()
+        {
+            var expected = "Hello, Andrea, Giovanni and Franco. AND HELLO GIUSEPPE, MARIO AND FRANCESCO!";
+            var actual = _sut.Greet("Andrea", "Giovanni", "Franco", "GIUSEPPE", "MARIO", "FRANCESCO");
 
             Assert.AreEqual(expected, actual);
         }
