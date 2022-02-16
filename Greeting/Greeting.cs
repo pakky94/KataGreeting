@@ -1,4 +1,5 @@
-﻿using Greeting.NamesPreprocessors;
+﻿using Greeting.Extensions;
+using Greeting.NamesPreprocessors;
 using System.Collections.Generic;
 using System.Linq;
 

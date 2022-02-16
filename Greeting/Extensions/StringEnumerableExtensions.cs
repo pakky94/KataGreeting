@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Greeting
+namespace Greeting.Extensions
 {
     public static class StringEnumerableExtensions
     {
