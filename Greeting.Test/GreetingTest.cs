@@ -1,4 +1,7 @@
+using Greeting.NamesPreprocessors;
+using Moq;
 using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace Greeting.Test
 {
@@ -9,7 +12,11 @@ namespace Greeting.Test
         [SetUp]
         public void Setup()
         {
-            _sut = new Greeting();
+            var preprocessor = new Mock<INamesPreprocessor>();
+            preprocessor.Setup(x => x.Process(It.IsAny<IEnumerable<string>>()))
+                .Returns<IEnumerable<string>>(names => names);
+
+            _sut = new Greeting(preprocessor.Object);
         }
 
         [Test]
@@ -26,6 +33,15 @@ namespace Greeting.Test
         {
             var expected = "Hello, my friend.";
             var actual = _sut.Greet(null);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void Should_Handle_Empty_Array()
+        {
+            var expected = "Hello, my friend.";
+            var actual = _sut.Greet(System.Array.Empty<string>());
 
             Assert.AreEqual(expected, actual);
         }
@@ -65,7 +81,7 @@ namespace Greeting.Test
 
             Assert.AreEqual(expected, actual);
         }
-        
+
         [Test]
         public void Should_Handle_Multiple_Name_With_Mulitple_Upper()
         {
@@ -74,6 +90,5 @@ namespace Greeting.Test
 
             Assert.AreEqual(expected, actual);
         }
-        
     }
 }

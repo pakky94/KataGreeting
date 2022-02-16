@@ -1,52 +1,46 @@
-﻿using System;
+﻿using Greeting.NamesPreprocessors;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Greeting
 {
     public class Greeting : IGreeting
     {
+        private readonly INamesPreprocessor _namesPreprocessor;
+        public Greeting(INamesPreprocessor namesPreprocessor)
+        {
+            _namesPreprocessor = namesPreprocessor;
+        }
+
         public string Greet(params string[] name)
         {
-            if (name is null)
+            if (name is null || name.Length == 0)
                 return "Hello, my friend.";
 
-            var lowerNamesString = ChainNamesLower(name.Where(n => !IsUppercase(n)));
-            var upperNamesString = ChainNamesUpper(name.Where(n => IsUppercase(n)));
+            var names = _namesPreprocessor.Process(name);
 
-            var greeting = "";
+            var lowerGreeting = BuildGreeting(names.Where(n => !IsUppercase(n)), "Hello, ", ".", " and ");
+            var upperGreeting = BuildGreeting(names.Where(n => IsUppercase(n)), "HELLO ", "!", " AND ");
 
-            if (!string.IsNullOrEmpty(lowerNamesString))
-                greeting = $"Hello, {lowerNamesString}.";
-
-            if (!string.IsNullOrEmpty(upperNamesString))
-            {
-                if (!string.IsNullOrEmpty(lowerNamesString))
-                    greeting += " AND ";
-
-                greeting += $"HELLO {upperNamesString}!";
-            }
-
-            return greeting;
+            return JoinGreetings(lowerGreeting, upperGreeting);
         }
 
-        private string ChainNamesLower(IEnumerable<string> names) => ChainNames(names, "and");
-        private string ChainNamesUpper(IEnumerable<string> names) => ChainNames(names, "AND");
+        private static string BuildGreeting(IEnumerable<string> names, string start, string end, string lastSeparator) =>
+            names.Any()
+                ? $"{start}{names.JoinWithDifferentLastSeparator(", ", lastSeparator)}{end}"
+                : string.Empty;
 
-        private string ChainNames(IEnumerable<string> names, string lastSeparator)
+        private static string JoinGreetings(string lowerCaseGreeting, string upperCaseGreeting)
         {
-            if (!names.Any())
-                return "";
+            var bothGreetingsNotEmpty = !string.IsNullOrEmpty(lowerCaseGreeting) &&
+                                        !string.IsNullOrEmpty(upperCaseGreeting);
 
-            if (names.Count() == 1)
-                return names.First();
-
-            var allNamesMinusLast = names.Take(names.Count() - 1);
-            return $"{string.Join(", ", allNamesMinusLast)} {lastSeparator} {names.Last()}";
+            if (bothGreetingsNotEmpty)
+                return $"{lowerCaseGreeting} AND {upperCaseGreeting}";
+            else
+                return $"{lowerCaseGreeting}{upperCaseGreeting}";
         }
 
-        private bool IsUppercase(string str) => str.Equals(str.ToUpper());
+        private static bool IsUppercase(string str) => str.All(char.IsUpper);
     }
 }

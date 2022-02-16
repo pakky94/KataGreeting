@@ -6,12 +6,12 @@ namespace Greeting.Test
 {
     public class ManyNamesHandlerTests
     {
-        private IGreetingHandler _sut;
+        private AbstractGreetingHandler _sut;
 
         [SetUp]
         public void Setup()
         {
-            var mock = new Mock<IGreetingHandler>();
+            var mock = new Mock<AbstractGreetingHandler>();
             mock.Setup(x => x.Handle(new string[]{ "Andrea", "Franco", "Giuseppe"})).Returns("Hello, Andrea, Franco and Giuseppe.");
             _sut = mock.Object;
         }
