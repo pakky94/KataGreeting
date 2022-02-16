@@ -28,7 +28,7 @@ namespace Greeting.NamesPreprocessors
                 if (!name.EndsWith('\"'))
                     throw new FormatException($"Invalid format for name: '{name}'");
 
-                return new string[] { name.Trim('\"') };
+                return new string[] { name.Trim('\"').Trim() };
             }
             return name.Split(',').Select(x => x.Trim());
         }

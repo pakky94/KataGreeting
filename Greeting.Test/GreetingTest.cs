@@ -8,6 +8,7 @@ namespace Greeting.Test
     public class GreetingTests
     {
         private IGreeting _sut;
+        private Mock<IGreetingBuilder> _greetingBuilder;
 
         [SetUp]
         public void Setup()
@@ -16,79 +17,39 @@ namespace Greeting.Test
             preprocessor.Setup(x => x.Process(It.IsAny<IEnumerable<string>>()))
                 .Returns<IEnumerable<string>>(names => names);
 
-            _sut = new Greeting(preprocessor.Object);
-        }
+            _greetingBuilder = new Mock<IGreetingBuilder>();
 
-        [Test]
-        public void Should_Add_Greeting_To_Name()
-        {
-            var expected = "Hello, Andrea.";
-            var actual = _sut.Greet("Andrea");
-
-            Assert.AreEqual(expected, actual);
+            _sut = new Greeting(preprocessor.Object, _greetingBuilder.Object);
         }
 
         [Test]
         public void Should_Handle_Null_Name()
         {
-            var expected = "Hello, my friend.";
-            var actual = _sut.Greet(null);
-
-            Assert.AreEqual(expected, actual);
+            _sut.Greet(null);
+            _greetingBuilder.Verify(gb => gb.Greet(new string[0]));
         }
 
         [Test]
         public void Should_Handle_Empty_Array()
         {
-            var expected = "Hello, my friend.";
-            var actual = _sut.Greet(System.Array.Empty<string>());
-
-            Assert.AreEqual(expected, actual);
+            _sut.Greet(System.Array.Empty<string>());
+            _greetingBuilder.Verify(gb => gb.Greet(new string[0]));
         }
 
         [Test]
-        public void Should_Handle_Uppercase_Name()
+        public void Should_Pass_Single_Name()
         {
-            var expected = "HELLO ANDREA!";
-            var actual = _sut.Greet("ANDREA");
-
-            Assert.AreEqual(expected, actual);
+            _sut.Greet("Andrea");
+            _greetingBuilder.Verify(gb => gb.Greet(new string[] { "Andrea" }));
         }
 
         [Test]
-        public void Should_Handle_Two_Name()
+        public void Should_Pass_Multiple_Names()
         {
-            var expected = "Hello, Andrea and Franco.";
-            var actual = _sut.Greet("Andrea", "Franco");
-
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void Should_Handle_Multiple_Name()
-        {
-            var expected = "Hello, Andrea, Franco and Giuseppe.";
-            var actual = _sut.Greet("Andrea", "Franco", "Giuseppe");
-
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void Should_Handle_Multiple_Name_With_Upper()
-        {
-            var expected = "Hello, Andrea and Franco. AND HELLO GIUSEPPE!";
-            var actual = _sut.Greet("Andrea", "Franco", "GIUSEPPE");
-
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void Should_Handle_Multiple_Name_With_Mulitple_Upper()
-        {
-            var expected = "Hello, Andrea, Giovanni and Franco. AND HELLO GIUSEPPE, MARIO AND FRANCESCO!";
-            var actual = _sut.Greet("Andrea", "Giovanni", "Franco", "GIUSEPPE", "MARIO", "FRANCESCO");
-
-            Assert.AreEqual(expected, actual);
+            _sut.Greet("Andrea", "Giovanni", "Franco", "GIUSEPPE", "MARIO", "FRANCESCO");
+            _greetingBuilder.Verify(gb => gb.Greet(new string[] { 
+                "Andrea", "Giovanni", "Franco", "GIUSEPPE", "MARIO", "FRANCESCO" 
+            }));
         }
     }
 }

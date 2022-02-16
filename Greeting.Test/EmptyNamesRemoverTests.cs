@@ -3,14 +3,14 @@ using NUnit.Framework;
 
 namespace Greeting.Test
 {
-    public class EmptyNamesFilterTests
+    public class EmptyNamesRemoverTests
     {
         private INamesPreprocessor _sut;
 
         [SetUp]
         public void SetUp()
         {
-            _sut = new EmptyNamesFilter();
+            _sut = new EmptyNamesRemover();
         }
 
         [Test]

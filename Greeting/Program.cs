@@ -1,4 +1,4 @@
-﻿using Greeting.NamesPreprocessors;
+﻿using Greeting.IOC;
 using System;
 
 namespace Greeting
@@ -7,7 +7,7 @@ namespace Greeting
     {
         static void Main(string[] names)
         {
-            var greeter = new Greeting(new EmptyNamesFilter(new NamesSplitter()));
+            var greeter = Container.GetService<IGreeting>();
             var result = greeter.Greet(names);
             Console.WriteLine(result);
         }
