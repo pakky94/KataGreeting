@@ -11,15 +11,8 @@ namespace Greeting.NamesPreprocessors
 
         public override IEnumerable<string> Process(IEnumerable<string> names) => SplitNames(InnerProcess(names));
 
-        private static List<string> SplitNames(IEnumerable<string> names)
-        {
-            var result = new List<string>();
-            foreach (var name in names)
-            {
-                result.AddRange(SplitName(name));
-            }
-            return result;
-        }
+        private static List<string> SplitNames(IEnumerable<string> names) =>
+            names.SelectMany(name => SplitName(name)).ToList();
 
         private static IEnumerable<string> SplitName(string name)
         {

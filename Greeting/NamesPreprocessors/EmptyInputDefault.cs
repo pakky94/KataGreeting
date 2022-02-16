@@ -9,6 +9,9 @@ namespace Greeting.NamesPreprocessors
         public EmptyInputDefault(INamesPreprocessor inner) : base(inner) { }
 
         public override IEnumerable<string> Process(IEnumerable<string> names)
-            => names.Any() ? names : new string[] { "my friend" };
+        {
+            names = InnerProcess(names);
+            return names.Any() ? names : new string[] { "my friend" };
+        }
     }
 }

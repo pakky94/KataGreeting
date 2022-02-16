@@ -14,6 +14,6 @@ namespace Greeting.NamesPreprocessors
         public abstract IEnumerable<string> Process(IEnumerable<string> names);
 
         protected IEnumerable<string> InnerProcess(IEnumerable<string> names) =>
-            _inner is null ? names : _inner.Process(names);
+            _inner?.Process(names) ?? names;
     }
 }
